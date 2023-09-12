@@ -1,7 +1,7 @@
 """
 Python reader to convert TrackmateXML to numpy
 Version 1.0.0
-(c) R.Harkes 2022 NKI
+(c) R.Harkes 2022 NKI.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,8 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import json
-import os
 import logging
+import os
+from typing import Dict, List
 
 import numpy as np
 from lxml import etree
@@ -25,85 +26,91 @@ from version_parser import Version, VersionType
 
 class TrackmateXML:
     """
-    Class to import a TrackmateXML. (c) R.Harkes GPLv3
+    Class to import a TrackmateXML. (c) R.Harkes GPLv3.
 
     Please note that TrackMate is available through Fiji, and is based on a publication.
     If you use it successfully for your research please be so kind to cite the work:
-    Tinevez, JY.; Perry, N. & Schindelin, J. et al. (2017), 'TrackMate: An open and extensible platform for single-particle tracking.', Methods 115: 80-90, PMID 27713081.
+    Tinevez, JY.; Perry, N. & Schindelin, J. et al. (2017), 'TrackMate: An open and
+    extensible platform for single-particle tracking.', Methods 115: 80-90, PMID
+    27713081.
     https://www.ncbi.nlm.nih.gov/pubmed/27713081
     https://scholar.google.com/scholar?cluster=9846627681021220605
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.version = None
         self.spatialunits = None
         self.timeunits = None
-        self.spotheader = []  # type:[str]
+        self.spotheader: List[str] = []
         self.spots = np.zeros((0, 0), dtype=float)
-        self.tracks = []  # type: [np.ndarray]
-        self.tracknames = []  # type: [str]
-        self.displaysettings = {}
+        self.tracks: List[np.ndarray] = []
+        self.tracknames: List[str] = []
+        self.displaysettings: Dict[str, str] = {}
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
+        """Return True if the version is set.
+
+        Returns
+        -------
+        bool
+            True if the version is set.
+        """
         if self.version:
             return True
         else:
             return False
 
     def loadfile(self, pth: os.PathLike) -> None:
-        """
-        Load a TrackMate XML-file
-        """
+        """Load a TrackMate XML-file."""
         self._load(etree.parse(pth))
 
     def loadtree(self, tree: etree.ElementTree) -> None:
-        """
-        Load a Trackmate XML-tree
-        """
+        """Load a Trackmate XML-tree."""
         self._load(tree)
 
     def gettraces(
-        self, trackname, spot_property: str, duplicate_split=False, break_split=False
+        self,
+        trackname: str,
+        spot_property: str,
+        duplicate_split: bool = False,
+        break_split: bool = False,
     ) -> list:
-        """
-        Get traces from a trackname and a spot-property
-        """
+        """Get traces from a trackname and a spot-property."""
         tracks = self.analysetrack(trackname, duplicate_split, break_split)
         return [self.getproperty(track["spotids"], spot_property) for track in tracks]
 
     def getproperty(self, spotids: np.ndarray, spot_property: str) -> np.ndarray:
-        """
-        Get properties from spotids
-        """
+        """Get properties from spotids."""
         if spot_property not in self.spotheader:
             logging.error(f"{spot_property} not in spot properties")
             return np.zeros((0, 0), dtype=float)
         prop_idx = self.spotheader.index(spot_property)
         spotid_idx = self.spotheader.index("ID")
-        res = np.zeros(len(spotids), dtype=np.float)
+        res = np.zeros(len(spotids), dtype=float)
         for i, s in enumerate(spotids):
             res[i] = self.spots[self.spots[:, spotid_idx] == s, prop_idx]
         return res
 
-    def _load(self, tree) -> None:
+    def _load(self, tree: etree.ElementTree) -> None:
         self._getversion(tree.getroot())
         self._analysetree(tree)
 
     def getversion(self) -> str:
-        """
-        Get the version of the TrackmateXML data as string.
-        """
-        return self.version.get_typed_version(VersionType.VERSION)
+        """Get the version of the TrackmateXML data as string."""
+        if self.version is None:
+            return "No version"
 
-    def _getversion(self, root) -> None:
+        return str(self.version.get_typed_version(VersionType.VERSION))
+
+    def _getversion(self, root: etree.Element) -> None:
         if root.tag == "TrackMate":
             self.version = Version(root.attrib.get("version", None))
             if self.version is None:
-                logging.error(f"Invalid Version")
+                logging.error("Invalid Version")
         else:
             logging.error("Not a TrackMateXML")
 
-    def _analysetree(self, tree) -> None:
+    def _analysetree(self, tree: etree.ElementTree) -> None:
         root = tree.getroot()
         for element in root:
             if element.tag == "Log":
@@ -130,7 +137,9 @@ class TrackmateXML:
         self.timeunits = element.attrib.get("timeunits", None)
         for subelement in element:
             if subelement.tag == "FeatureDeclarations":
-                pass  # would be nice if the feature declaration would actually list the features in the xml, but instead it lists all possible features
+                # would be nice if the feature declaration would actually list the
+                # features in the xml, but instead it lists all possible features
+                pass
             elif subelement.tag == "AllSpots":
                 self._getspots(subelement)
             elif subelement.tag == "AllTracks":
@@ -141,32 +150,24 @@ class TrackmateXML:
                 logging.error(f"Unrecognised element {element}")
 
     def _getsettings(self, element: etree.Element) -> None:
-        """
-        Could be added, but is not required for displaying intensity tracks
-        """
+        """Could be added, but is not required for displaying intensity tracks."""
         pass
 
     def _getfilteredtracks(self, element: etree.Element) -> None:
-        """
-        Could be added, but is not required for displaying intensity tracks
-        """
+        """Could be added, but is not required for displaying intensity tracks."""
         pass
 
     def _get_gui_state(self, element: etree.Element) -> None:
-        """
-        Could be added, but does not seem usefull in python.
-        """
+        """Could be added, but does not seem usefull in python."""
         pass
 
     def _getspots(self, element: etree.Element) -> None:
-        """
-        Put all numeric spot data in a numpy array.
-        """
+        """Put all numeric spot data in a numpy array."""
         nspots = int(element.attrib.get("nspots", "0"))
         # construct header
         spotid = 0
         spot = element[0][0]
-        keys = [a for a in spot.attrib]
+        keys = list(spot.attrib)
         for k in keys:
             try:
                 float(spot.attrib[k])
@@ -186,7 +187,7 @@ class TrackmateXML:
         We could import more, but it is not needed for displaying intensity tracks.
         """
         for track in element:
-            t = np.zeros((len(track), 2), dtype=np.int)
+            t = np.zeros((len(track), 2), dtype=int)
             for i, edge in enumerate(track):
                 t[i, 0] = edge.attrib.get("SPOT_SOURCE_ID", -1)
                 t[i, 1] = edge.attrib.get("SPOT_TARGET_ID", -1)
@@ -196,18 +197,14 @@ class TrackmateXML:
     def analysetrack(
         self, trackname: str, duplicate_split=False, break_split=False
     ) -> list:
-        """
-        Traces a track to find the sequence of spotids
-        """
+        """Traces a track to find the sequence of spotids."""
         trackid = self.tracknames.index(trackname)
         return self.analysetrackid(trackid, duplicate_split, break_split)
 
     def analysetrackid(
         self, trackid: int, duplicate_split=False, break_split=False
     ) -> list:
-        """
-        Traces a track to find the sequence of spotids
-        """
+        """Traces a track to find the sequence of spotids."""
         track = self.tracks[trackid]
         unique_sources = np.setdiff1d(track[:, 0], track[:, 1], assume_unique=True)
         if unique_sources.size != 1:
@@ -226,7 +223,7 @@ class TrackmateXML:
                 "track": True,
             }
         ]
-        while any([x["track"] for x in traced_tracks]):
+        while any(x["track"] for x in traced_tracks):
             for traced_track in traced_tracks:
                 if not traced_track["track"]:
                     continue
