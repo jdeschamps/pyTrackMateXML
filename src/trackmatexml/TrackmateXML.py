@@ -166,7 +166,13 @@ class TrackmateXML:
         nspots = int(element.attrib.get("nspots", "0"))
         # construct header
         spotid = 0
-        spot = element[0][0]
+        
+        # find the first spot and use it to construct the header
+        counter  = 0
+        while len(element[counter]) == 0:
+            counter += 1
+        spot = element[counter][0]
+        
         keys = list(spot.attrib)
         for k in keys:
             try:
@@ -174,6 +180,7 @@ class TrackmateXML:
             except ValueError:  # remove keys we cannot convert to floats
                 keys.remove(k)
         self.spotheader = keys
+        
         self.spots = np.zeros((nspots, len(keys)))
         for sif in element:
             for spot in sif:
