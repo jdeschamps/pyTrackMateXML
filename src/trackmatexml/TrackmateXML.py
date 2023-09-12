@@ -166,15 +166,15 @@ class TrackmateXML:
         nspots = int(element.attrib.get("nspots", "0"))
         # construct header
         spotid = 0
-        
+
         # find the first spot and use it to construct the header
-        first_spot  = 0
+        first_spot = 0
         while first_spot < len(element) and len(element[first_spot]) == 0:
             first_spot += 1
 
         if first_spot < len(element):
             spot: etree.Element = element[first_spot][0]
-            
+
             keys = list(spot.attrib)
             for k in keys:
                 try:
@@ -182,7 +182,7 @@ class TrackmateXML:
                 except ValueError:  # remove keys we cannot convert to floats
                     keys.remove(k)
             self.spotheader = keys
-            
+
             self.spots = np.zeros((nspots, len(keys)))
             for sif in element:
                 for spot in sif:
@@ -206,14 +206,14 @@ class TrackmateXML:
             self.tracknames.append(track.attrib.get("name", "unknown"))
 
     def analysetrack(
-        self, trackname: str, duplicate_split: bool=False, break_split: bool=False
+        self, trackname: str, duplicate_split: bool = False, break_split: bool = False
     ) -> list:
         """Traces a track to find the sequence of spotids."""
         trackid = self.tracknames.index(trackname)
         return self.analysetrackid(trackid, duplicate_split, break_split)
 
     def analysetrackid(
-        self, trackid: int, duplicate_split: bool=False, break_split: bool=False
+        self, trackid: int, duplicate_split: bool = False, break_split: bool = False
     ) -> list:
         """Traces a track to find the sequence of spotids."""
         track = self.tracks[trackid]

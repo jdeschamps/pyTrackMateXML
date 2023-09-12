@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pytest
 
 
@@ -8,7 +9,7 @@ def empty_xml(tmp_path) -> Path:
     path = tmp_path / "Empty.xml"
 
     # file content corresponding to an empty Trackmate XML file
-    xml = '''<?xml version="1.0" encoding="UTF-8"?>
+    xml = """<?xml version="1.0" encoding="UTF-8"?>
     <TrackMate version="7.11.1">
     <Log>TrackMate v7.11.1 started on:
     Tue, 12 Sep 2023 10:33:58
@@ -26,7 +27,7 @@ def empty_xml(tmp_path) -> Path:
     - ExTrack probabilities provides: P stuck, P diffusive; is manual.
     - Spot contrast and SNR provides: Ctrst ch1, SNR ch1.
     Edge feature analyzers:
-    - Directional change provides: γ rate.
+    - Directional change provides: y rate.
     - Edge speed provides: Speed, Disp.
     - Edge target provides: Source ID, Target ID, Cost.
     - Edge location provides: Edge T, Edge X, Edge Y, Edge Z.
@@ -38,7 +39,7 @@ def empty_xml(tmp_path) -> Path:
     - Track location provides: Track X, Track Y, Track Z.
     - Track speed provides: Mean sp., Max speed, Min speed, Med. speed, Std speed.
     - Track quality provides: Mean Q.
-    - Track motility analysis provides: Total dist., Max dist., Cfn. ratio, Mn. v. line, Fwd. progr., Mn. γ rate.
+    - Track motility analysis provides: Total dist., Max dist., Cfn. ratio, Mn. v. line, Fwd. progr., Mn. y rate.
 
     Image region of interest:
     Image data:
@@ -76,19 +77,19 @@ def empty_xml(tmp_path) -> Path:
     Configured tracker Simple LAP tracker with settings:
     - max frame gap: 2
     - alternative linking cost factor: 1.05
-    - linking feature penalties: 
+    - linking feature penalties:
     - linking max distance: 15.0
     - gap closing max distance: 15.0
-    - merging feature penalties: 
+    - merging feature penalties:
     - splitting max distance: 15.0
     - blocking value: Infinity
     - allow gap closing: true
     - allow track splitting: false
     - allow track merging: false
     - merging max distance: 15.0
-    - splitting feature penalties: 
+    - splitting feature penalties:
     - cutoff percentile: 0.9
-    - gap closing feature penalties: 
+    - gap closing feature penalties:
 
     Starting tracking process.
     Tracking done in 0.0 s.
@@ -128,7 +129,7 @@ def empty_xml(tmp_path) -> Path:
             <Feature feature="SPOT_SOURCE_ID" name="Source spot ID" shortname="Source ID" dimension="NONE" isint="true" />
             <Feature feature="SPOT_TARGET_ID" name="Target spot ID" shortname="Target ID" dimension="NONE" isint="true" />
             <Feature feature="LINK_COST" name="Edge cost" shortname="Cost" dimension="COST" isint="false" />
-            <Feature feature="DIRECTIONAL_CHANGE_RATE" name="Directional change rate" shortname="γ rate" dimension="ANGLE_RATE" isint="false" />
+            <Feature feature="DIRECTIONAL_CHANGE_RATE" name="Directional change rate" shortname="y rate" dimension="ANGLE_RATE" isint="false" />
             <Feature feature="SPEED" name="Speed" shortname="Speed" dimension="VELOCITY" isint="false" />
             <Feature feature="DISPLACEMENT" name="Displacement" shortname="Disp." dimension="LENGTH" isint="false" />
             <Feature feature="EDGE_TIME" name="Edge time" shortname="Edge T" dimension="TIME" isint="false" />
@@ -164,7 +165,7 @@ def empty_xml(tmp_path) -> Path:
             <Feature feature="CONFINEMENT_RATIO" name="Confinement ratio" shortname="Cfn. ratio" dimension="NONE" isint="false" />
             <Feature feature="MEAN_STRAIGHT_LINE_SPEED" name="Mean straight line speed" shortname="Mn. v. line" dimension="VELOCITY" isint="false" />
             <Feature feature="LINEARITY_OF_FORWARD_PROGRESSION" name="Linearity of forward progression" shortname="Fwd. progr." dimension="NONE" isint="false" />
-            <Feature feature="MEAN_DIRECTIONAL_CHANGE_RATE" name="Mean directional change rate" shortname="Mn. γ rate" dimension="ANGLE_RATE" isint="false" />
+            <Feature feature="MEAN_DIRECTIONAL_CHANGE_RATE" name="Mean directional change rate" shortname="Mn. y rate" dimension="ANGLE_RATE" isint="false" />
         </TrackFeatures>
         </FeatureDeclarations>
         <AllSpots nspots="0">
@@ -265,7 +266,7 @@ def empty_xml(tmp_path) -> Path:
     "spotFilled": false,
     "spotTransparencyAlpha": 1.0
     }</DisplaySettings>
-    </TrackMate>'''
+    </TrackMate>"""
 
     # write file
     with open(path, "w") as f:
@@ -280,7 +281,7 @@ def two_tracks_xml(tmp_path) -> Path:
     path = tmp_path / "TwoTracks.xml"
 
     # file content corresponding to an empty Trackmate XML file
-    xml = '''<?xml version="1.0" encoding="UTF-8"?>
+    xml = """<?xml version="1.0" encoding="UTF-8"?>
     <TrackMate version="7.11.1">
     <Log>TrackMate v7.11.1 started on:
     Tue, 12 Sep 2023 11:42:16
@@ -298,7 +299,7 @@ def two_tracks_xml(tmp_path) -> Path:
     - ExTrack probabilities provides: P stuck, P diffusive; is manual.
     - Spot contrast and SNR provides: Ctrst ch1, SNR ch1.
     Edge feature analyzers:
-    - Directional change provides: γ rate.
+    - Directional change provides: y rate.
     - Edge speed provides: Speed, Disp.
     - Edge target provides: Source ID, Target ID, Cost.
     - Edge location provides: Edge T, Edge X, Edge Y, Edge Z.
@@ -310,7 +311,7 @@ def two_tracks_xml(tmp_path) -> Path:
     - Track location provides: Track X, Track Y, Track Z.
     - Track speed provides: Mean sp., Max speed, Min speed, Med. speed, Std speed.
     - Track quality provides: Mean Q.
-    - Track motility analysis provides: Total dist., Max dist., Cfn. ratio, Mn. v. line, Fwd. progr., Mn. γ rate.
+    - Track motility analysis provides: Total dist., Max dist., Cfn. ratio, Mn. v. line, Fwd. progr., Mn. y rate.
 
     Image region of interest:
     Image data:
@@ -371,19 +372,19 @@ def two_tracks_xml(tmp_path) -> Path:
     Configured tracker Simple LAP tracker with settings:
     - max frame gap: 2
     - alternative linking cost factor: 1.05
-    - linking feature penalties: 
+    - linking feature penalties:
     - linking max distance: 15.0
     - gap closing max distance: 15.0
-    - merging feature penalties: 
+    - merging feature penalties:
     - splitting max distance: 15.0
     - blocking value: Infinity
     - allow gap closing: true
     - allow track splitting: false
     - allow track merging: false
     - merging max distance: 15.0
-    - splitting feature penalties: 
+    - splitting feature penalties:
     - cutoff percentile: 0.9
-    - gap closing feature penalties: 
+    - gap closing feature penalties:
 
     Starting tracking process.
     Tracking done in 0.0 s.
@@ -487,7 +488,7 @@ def two_tracks_xml(tmp_path) -> Path:
             <Feature feature="SPOT_SOURCE_ID" name="Source spot ID" shortname="Source ID" dimension="NONE" isint="true" />
             <Feature feature="SPOT_TARGET_ID" name="Target spot ID" shortname="Target ID" dimension="NONE" isint="true" />
             <Feature feature="LINK_COST" name="Edge cost" shortname="Cost" dimension="COST" isint="false" />
-            <Feature feature="DIRECTIONAL_CHANGE_RATE" name="Directional change rate" shortname="γ rate" dimension="ANGLE_RATE" isint="false" />
+            <Feature feature="DIRECTIONAL_CHANGE_RATE" name="Directional change rate" shortname="y rate" dimension="ANGLE_RATE" isint="false" />
             <Feature feature="SPEED" name="Speed" shortname="Speed" dimension="VELOCITY" isint="false" />
             <Feature feature="DISPLACEMENT" name="Displacement" shortname="Disp." dimension="LENGTH" isint="false" />
             <Feature feature="EDGE_TIME" name="Edge time" shortname="Edge T" dimension="TIME" isint="false" />
@@ -523,7 +524,7 @@ def two_tracks_xml(tmp_path) -> Path:
             <Feature feature="CONFINEMENT_RATIO" name="Confinement ratio" shortname="Cfn. ratio" dimension="NONE" isint="false" />
             <Feature feature="MEAN_STRAIGHT_LINE_SPEED" name="Mean straight line speed" shortname="Mn. v. line" dimension="VELOCITY" isint="false" />
             <Feature feature="LINEARITY_OF_FORWARD_PROGRESSION" name="Linearity of forward progression" shortname="Fwd. progr." dimension="NONE" isint="false" />
-            <Feature feature="MEAN_DIRECTIONAL_CHANGE_RATE" name="Mean directional change rate" shortname="Mn. γ rate" dimension="ANGLE_RATE" isint="false" />
+            <Feature feature="MEAN_DIRECTIONAL_CHANGE_RATE" name="Mean directional change rate" shortname="Mn. y rate" dimension="ANGLE_RATE" isint="false" />
         </TrackFeatures>
         </FeatureDeclarations>
         <AllSpots nspots="4">
@@ -643,7 +644,7 @@ def two_tracks_xml(tmp_path) -> Path:
     "spotTransparencyAlpha": 1.0
     }</DisplaySettings>
     </TrackMate>
-    '''
+    """
 
     # write file
     with open(path, "w") as f:
