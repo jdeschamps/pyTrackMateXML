@@ -168,25 +168,29 @@ class TrackmateXML:
         spotid = 0
         
         # find the first spot and use it to construct the header
-        counter  = 0
-        while len(element[counter]) == 0:
-            counter += 1
-        spot = element[counter][0]
-        
-        keys = list(spot.attrib)
-        for k in keys:
-            try:
-                float(spot.attrib[k])
-            except ValueError:  # remove keys we cannot convert to floats
-                keys.remove(k)
-        self.spotheader = keys
-        
-        self.spots = np.zeros((nspots, len(keys)))
-        for sif in element:
-            for spot in sif:
-                for i, k in enumerate(keys):
-                    self.spots[spotid, i] = spot.attrib.get(k, None)
-                spotid += 1
+        first_spot  = 0
+        while first_spot < len(element) and len(element[first_spot]) == 0:
+            first_spot += 1
+
+        if first_spot < len(element):
+            spot: etree.Element = element[first_spot][0]
+            
+            keys = list(spot.attrib)
+            for k in keys:
+                try:
+                    float(spot.attrib[k])
+                except ValueError:  # remove keys we cannot convert to floats
+                    keys.remove(k)
+            self.spotheader = keys
+            
+            self.spots = np.zeros((nspots, len(keys)))
+            for sif in element:
+                for spot in sif:
+                    for i, k in enumerate(keys):
+                        self.spots[spotid, i] = spot.attrib.get(k, None)
+                    spotid += 1
+        else:
+            raise ValueError("No spots found in xml file")
 
     def _gettracks(self, element: etree.Element) -> None:
         """
