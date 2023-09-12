@@ -195,14 +195,14 @@ class TrackmateXML:
             self.tracknames.append(track.attrib.get("name", "unknown"))
 
     def analysetrack(
-        self, trackname: str, duplicate_split=False, break_split=False
+        self, trackname: str, duplicate_split: bool=False, break_split: bool=False
     ) -> list:
         """Traces a track to find the sequence of spotids."""
         trackid = self.tracknames.index(trackname)
         return self.analysetrackid(trackid, duplicate_split, break_split)
 
     def analysetrackid(
-        self, trackid: int, duplicate_split=False, break_split=False
+        self, trackid: int, duplicate_split: bool=False, break_split: bool=False
     ) -> list:
         """Traces a track to find the sequence of spotids."""
         track = self.tracks[trackid]
@@ -240,7 +240,7 @@ class TrackmateXML:
                 else:  # multiple targets, a split
                     if duplicate_split:  # a copy of the history is added to each track
                         for i in range(1, targetidx.size):
-                            spotids = np.concatenate(
+                            spotids: np.ndarray = np.concatenate(
                                 (traced_track_ids, [track[targetidx[i], 1]])
                             )
                             cellid += 1
