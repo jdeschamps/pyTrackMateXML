@@ -1,3 +1,10 @@
+
+[![License](https://img.shields.io/pypi/l/fucciphase.svg?color=green)](https://github.com/rharkes/pyTrackMateXML/raw/main/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/fucciphase.svg?color=green)](https://pypi.org/project/fucciphase)
+[![Python Version](https://img.shields.io/pypi/pyversions/fucciphase.svg?color=green)](https://python.org)
+[![CI](https://github.com/rharkes/pyTrackMateXML/actions/workflows/ci.yml/badge.svg)](https://github.com/rharkes/pyTrackMateXML/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/rharkes/pyTrackMateXML/branch/main/graph/badge.svg)](https://codecov.io/gh/rharkes/pyTrackMateXML)
+
 # pyTrackMateXML
 For opening ImageJ TrackMate .xml files with python. Enables users to follow intensity traces based on TrackMate tracking results.
 
