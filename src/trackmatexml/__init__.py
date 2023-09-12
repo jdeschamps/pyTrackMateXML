@@ -1,2 +1,4 @@
 """Load functions into package."""
-__add__ = ["TrackmateXML"]
+__all__ = ["TrackmateXML"]
+
+from .trackmatexml import TrackmateXML
